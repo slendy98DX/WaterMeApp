@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = arrayOf(Plant::class), version = 1)
+@Database(entities = [Plant::class], version = 1, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun plantDao(): PlantDao
@@ -20,7 +20,8 @@ abstract class AppDatabase: RoomDatabase() {
                     context,
                     AppDatabase::class.java,
                     "app_database")
-                   .createFromAsset("database/plant.db")
+                    .fallbackToDestructiveMigration()
+                    .createFromAsset("database/plant.db")
                     .build()
                 INSTANCE = instance
                 instance

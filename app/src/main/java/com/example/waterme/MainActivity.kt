@@ -22,7 +22,6 @@ import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterme.adapater.PlantAdapter
 import com.example.waterme.adapater.PlantListener
-import com.example.waterme.ui.ReminderDialogFragment
 import com.example.waterme.viewmodel.PlantViewModel
 import com.example.waterme.viewmodel.PlantViewModelFactory
 import kotlinx.coroutines.flow.collect
@@ -39,8 +38,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val adapter = PlantAdapter(PlantListener { plant ->
-            val dialog = ReminderDialogFragment(plant.name)
-            dialog.show(supportFragmentManager, "WaterReminderDialogFragment")
+                viewModel.updatePlantStatus(plant.id)
             true
         })
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)

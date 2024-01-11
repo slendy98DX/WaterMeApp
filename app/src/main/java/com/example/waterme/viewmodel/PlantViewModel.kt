@@ -18,6 +18,7 @@ package com.example.waterme.viewmodel
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
@@ -25,13 +26,22 @@ import androidx.work.WorkManager
 import com.example.waterme.database.Plant
 import com.example.waterme.database.PlantDao
 import com.example.waterme.worker.WaterReminderWorker
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class PlantViewModel(application: Application, private val plantDao: PlantDao): ViewModel() {
 
-    fun collectPlants(): Flow<List<Plant>> = plantDao.getAll()
-    private val workManager = WorkManager.getInstance(application)
+    fun collectPlants(): Flow<List<Plant>> = plantDao.getAll().flowOn(Dispatchers.IO)
+    private val workManager = WorkManager.getInstance(application.applicationContext)
+
+    fun updatePlantStatus(id:Long){
+        viewModelScope.launch(Dispatchers.IO) {
+        plantDao.setStatus(id)
+        }
+    }
 
     internal fun scheduleReminder(
         duration: Long,
@@ -47,7 +57,6 @@ class PlantViewModel(application: Application, private val plantDao: PlantDao): 
         val notification = PeriodicWorkRequestBuilder<WaterReminderWorker>(duration,unit)
             .setInputData(data.build())
             .setInitialDelay(duration,unit)
-            .addTag("WORK")
             .build()
 
         // TODO: Enqueue the request as a unique work request

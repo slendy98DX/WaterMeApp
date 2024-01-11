@@ -18,24 +18,30 @@ package com.example.waterme.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import org.jetbrains.annotations.NotNull
 
 @Entity(tableName = "Plant")
 data class Plant(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
+    @NotNull
     val id: Long = 0,
 
     @ColumnInfo(name = "name")
+    @NotNull
     val name: String,
 
     @ColumnInfo(name = "schedule")
+    @NotNull
     val schedule: String,
 
     @ColumnInfo(name = "type")
+    @NotNull
     val type: String,
 
     @ColumnInfo(name = "description")
-    val description: String?,
+    @NotNull
+    val description: String,
 
     @ColumnInfo(name = "is_active", defaultValue = "false")
     val isActive: Boolean = false
