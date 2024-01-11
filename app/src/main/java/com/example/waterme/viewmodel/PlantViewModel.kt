@@ -59,7 +59,6 @@ class PlantViewModel(application: Application, private val plantDao: PlantDao): 
             .setInitialDelay(duration,unit)
             .build()
 
-        // TODO: Enqueue the request as a unique work request
 
         workManager.enqueueUniquePeriodicWork(
                 plantName,

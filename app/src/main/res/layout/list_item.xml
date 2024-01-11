@@ -34,9 +34,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:focusable="true"
+        android:clickable="true"
         android:onClick="@{() -> clickListener.onClick(plant)}"
         app:cardElevation="4dp"
-        app:cardCornerRadius="4dp" >
+        app:cardCornerRadius="4dp"
+        android:background="@{plant.isActive ? @color/light_grey : @color/grey}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
