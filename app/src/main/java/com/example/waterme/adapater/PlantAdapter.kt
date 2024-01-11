@@ -20,10 +20,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.waterme.database.Plant
 import com.example.waterme.databinding.ListItemBinding
-import com.example.waterme.model.Plant
 
-class PlantAdapter(private val longClickListener: PlantListener) :
+class PlantAdapter(private val clickListener: PlantListener) :
     ListAdapter<Plant, PlantAdapter.PlantViewHolder>(DiffCallback) {
 
     class PlantViewHolder(
@@ -31,11 +31,11 @@ class PlantAdapter(private val longClickListener: PlantListener) :
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            longClickListener: PlantListener,
+            clickListener: PlantListener,
             plant: Plant
         ) {
             binding.plant = plant
-            binding.longClickListner = longClickListener
+            binding.clickListener = clickListener
             binding.executePendingBindings()
         }
     }
@@ -60,10 +60,10 @@ class PlantAdapter(private val longClickListener: PlantListener) :
 
     override fun onBindViewHolder(holder: PlantViewHolder, position: Int) {
         val plant = getItem(position)
-        holder.bind(longClickListener, plant)
+        holder.bind(clickListener, plant)
     }
 }
 
-class PlantListener(val longClickListener: (plant: Plant) -> Boolean) {
-    fun onLongClick(plant: Plant) = longClickListener(plant)
+class PlantListener(val clickListener: (plant: Plant) -> Boolean) {
+    fun onClick(plant: Plant) = clickListener(plant)
 }

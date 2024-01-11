@@ -18,17 +18,20 @@ package com.example.waterme
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterme.adapater.PlantAdapter
 import com.example.waterme.adapater.PlantListener
 import com.example.waterme.ui.ReminderDialogFragment
 import com.example.waterme.viewmodel.PlantViewModel
 import com.example.waterme.viewmodel.PlantViewModelFactory
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: PlantViewModel by viewModels {
-        PlantViewModelFactory(application)
+        PlantViewModelFactory(application, (application as BaseApplication).database.plantDao())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +45,10 @@ class MainActivity : AppCompatActivity() {
         })
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
         recyclerView.adapter = adapter
-        val data = viewModel.plants
-        adapter.submitList(data)
+        lifecycle.coroutineScope.launch {
+            viewModel.collectPlants().collect(){
+                adapter.submitList(it)
+            }
+        }
     }
 }

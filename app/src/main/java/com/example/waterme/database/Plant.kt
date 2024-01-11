@@ -13,11 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.waterme.model
+package com.example.waterme.database
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "Plant")
 data class Plant(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val id: Long = 0,
+
+    @ColumnInfo(name = "name")
     val name: String,
+
+    @ColumnInfo(name = "schedule")
     val schedule: String,
+
+    @ColumnInfo(name = "type")
     val type: String,
-    val description: String
+
+    @ColumnInfo(name = "description")
+    val description: String?,
+
+    @ColumnInfo(name = "is_active", defaultValue = "false")
+    val isActive: Boolean = false
 )

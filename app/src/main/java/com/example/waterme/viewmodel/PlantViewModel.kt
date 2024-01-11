@@ -18,13 +18,20 @@ package com.example.waterme.viewmodel
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.waterme.data.DataSource
+import com.example.waterme.database.Plant
+import com.example.waterme.database.PlantDao
+import com.example.waterme.worker.WaterReminderWorker
+import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.TimeUnit
 
-class PlantViewModel(application: Application): ViewModel() {
+class PlantViewModel(application: Application, private val plantDao: PlantDao): ViewModel() {
 
-    val plants = DataSource.plants
+    fun collectPlants(): Flow<List<Plant>> = plantDao.getAll()
+    private val workManager = WorkManager.getInstance(application)
 
     internal fun scheduleReminder(
         duration: Long,
@@ -32,18 +39,33 @@ class PlantViewModel(application: Application): ViewModel() {
         plantName: String
     ) {
         // TODO: create a Data instance with the plantName passed to it
+        val data = Data.Builder()
+        data.putString(WaterReminderWorker.nameKey, plantName)
 
         // TODO: Generate a OneTimeWorkRequest with the passed in duration, time unit, and data
         //  instance
+        val notification = PeriodicWorkRequestBuilder<WaterReminderWorker>(duration,unit)
+            .setInputData(data.build())
+            .setInitialDelay(duration,unit)
+            .addTag("WORK")
+            .build()
 
         // TODO: Enqueue the request as a unique work request
+
+        workManager.enqueueUniquePeriodicWork(
+                plantName,
+                ExistingPeriodicWorkPolicy.KEEP,
+                notification
+            )
     }
 }
 
-class PlantViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+
+class PlantViewModelFactory(private val application: Application, private val plantDao: PlantDao) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(PlantViewModel::class.java)) {
-            PlantViewModel(application) as T
+            PlantViewModel(application,plantDao) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")
         }

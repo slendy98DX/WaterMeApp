@@ -20,8 +20,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import com.example.waterme.database.AppDatabase
 
 class BaseApplication : Application() {
+
+    val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
 
     override fun onCreate() {
         super.onCreate()

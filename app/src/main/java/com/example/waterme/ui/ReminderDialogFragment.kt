@@ -20,6 +20,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import com.example.waterme.BaseApplication
 import com.example.waterme.R
 import com.example.waterme.viewmodel.PlantViewModel
 import com.example.waterme.viewmodel.PlantViewModelFactory
@@ -28,7 +29,7 @@ import java.util.concurrent.TimeUnit
 class ReminderDialogFragment(private val plantName: String) : DialogFragment() {
 
     private val viewModel: PlantViewModel by viewModels {
-        PlantViewModelFactory(requireActivity().application)
+        PlantViewModelFactory(requireActivity().application,(requireActivity().application as BaseApplication).database.plantDao())
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

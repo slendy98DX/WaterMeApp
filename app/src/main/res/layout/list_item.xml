@@ -21,19 +21,19 @@
 
     <data>
         <variable
-            name="longClickListner"
+            name="clickListener"
             type="com.example.waterme.adapater.PlantListener" />
 
         <variable
             name="plant"
-            type="com.example.waterme.model.Plant" />
+            type="com.example.waterme.database.Plant" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:onLongClick="@{() -> longClickListner.onLongClick(plant)}"
+        android:onLongClick="@{() -> clickListener.onClick(plant)}"
         app:cardElevation="4dp"
         app:cardCornerRadius="4dp" >
 

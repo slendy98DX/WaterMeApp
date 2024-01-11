@@ -25,14 +25,12 @@ import androidx.work.WorkerParameters
 import com.example.waterme.BaseApplication
 import com.example.waterme.MainActivity
 import com.example.waterme.R
+import com.example.waterme.SharedPreferencesHelper
 
 class WaterReminderWorker(
     context: Context,
     workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
-
-    // Arbitrary id number
-    val notificationId = 17
 
     override fun doWork(): Result {
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
@@ -52,9 +50,13 @@ class WaterReminderWorker(
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
+        val notificationId = SharedPreferencesHelper.getNotificationIdCounter(applicationContext)
+
         with(NotificationManagerCompat.from(applicationContext)) {
             notify(notificationId, builder.build())
         }
+
+        SharedPreferencesHelper.incrementAndSaveNotificationIdCounter(applicationContext)
 
         return Result.success()
     }
