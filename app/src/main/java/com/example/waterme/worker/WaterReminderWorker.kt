@@ -61,6 +61,10 @@ class WaterReminderWorker(
         return Result.success()
     }
 
+    override fun onStopped() {
+        super.onStopped()
+    }
+
     companion object {
         const val nameKey = "NAME"
     }

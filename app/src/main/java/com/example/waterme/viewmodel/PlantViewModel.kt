@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit
 class PlantViewModel(application: Application, private val plantDao: PlantDao): ViewModel() {
 
     fun collectPlants(): Flow<List<Plant>> = plantDao.getAll().flowOn(Dispatchers.IO)
-    private val workManager = WorkManager.getInstance(application.applicationContext)
+    val workManager = WorkManager.getInstance(application.applicationContext)
 
     fun updatePlantStatus(id:Long){
         viewModelScope.launch(Dispatchers.IO) {
@@ -57,6 +57,7 @@ class PlantViewModel(application: Application, private val plantDao: PlantDao): 
         val notification = PeriodicWorkRequestBuilder<WaterReminderWorker>(duration,unit)
             .setInputData(data.build())
             .setInitialDelay(duration,unit)
+            .addTag("workCEO")
             .build()
 
 
@@ -65,6 +66,7 @@ class PlantViewModel(application: Application, private val plantDao: PlantDao): 
                 ExistingPeriodicWorkPolicy.KEEP,
                 notification
             )
+
     }
 }
 
