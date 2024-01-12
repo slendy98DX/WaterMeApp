@@ -34,12 +34,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:focusable="true"
+        android:background="@{plant.isActive ? @drawable/back_card_active : @drawable/back_card_notactive}"
         android:clickable="true"
+        android:focusable="true"
         android:onClick="@{() -> clickListener.onClick(plant)}"
-        app:cardElevation="4dp"
-        app:cardCornerRadius="4dp"
-        android:background="@{plant.isActive ? @color/light_grey : @color/grey}">
+        app:cardCornerRadius="15dp"
+        app:cardElevation="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -50,10 +50,10 @@
                 android:id="@+id/name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceHeadline6"
                 android:text="@{plant.name}"
-                app:layout_constraintTop_toTopOf="parent"
+                android:textAppearance="?attr/textAppearanceHeadline6"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Name" />
 
             <TextView
@@ -61,11 +61,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:text="@{plant.type}"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="?android:attr/textColorSecondary"
-                android:text="@{plant.type}"
-                app:layout_constraintTop_toBottomOf="@id/name"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name"
                 tools:text="Type" />
 
             <TextView
@@ -73,26 +73,35 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@{plant.description}"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="?android:attr/textColorSecondary"
-                android:text="@{plant.description}"
-                android:maxLines="2"
-                android:ellipsize="end"
-                app:layout_constraintTop_toBottomOf="@id/type"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/type"
                 tools:text="Description" />
-            
+
             <TextView
                 android:id="@+id/schedule"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:text="@{@string/schedule(plant.schedule)}"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="?android:attr/textColorSecondary"
-                android:text="@{@string/schedule(plant.schedule)}"
-                app:layout_constraintTop_toBottomOf="@id/description"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description"
                 tools:text="Water daily" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_clock"
+                android:visibility="@{plant.isActive ? 0 : 8}"
+                app:layout_constraintBottom_toBottomOf="@id/schedule"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

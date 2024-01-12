@@ -33,6 +33,7 @@ class WaterReminderWorker(
 ) : Worker(context, workerParams) {
 
     override fun doWork(): Result {
+        if(!this.isStopped){
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -59,10 +60,10 @@ class WaterReminderWorker(
         SharedPreferencesHelper.incrementAndSaveNotificationIdCounter(applicationContext)
 
         return Result.success()
-    }
-
-    override fun onStopped() {
-        super.onStopped()
+        }
+        else {
+            return Result.failure()
+        }
     }
 
     companion object {
