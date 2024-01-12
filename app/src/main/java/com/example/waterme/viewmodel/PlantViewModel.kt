@@ -16,12 +16,16 @@
 package com.example.waterme.viewmodel
 
 import android.app.Application
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.example.waterme.database.Plant
 import com.example.waterme.database.PlantDao
@@ -43,6 +47,12 @@ class PlantViewModel(application: Application, private val plantDao: PlantDao): 
         }
     }
 
+    fun showWorkers(context: Context){
+        val runningWorkers = workManager.getWorkInfosByTag("WORKER").get().filter { it.state != WorkInfo.State.CANCELLED }.size
+        Toast.makeText(context,"Workers running: $runningWorkers",Toast.LENGTH_SHORT).show()
+        Log.d("WorkersList","Worker list size :"+workManager.getWorkInfosByTag("WORKER").get().size + workManager.getWorkInfosByTag("WORKER").get().toString())
+    }
+
     internal fun scheduleReminder(
         duration: Long,
         unit: TimeUnit,
@@ -57,7 +67,7 @@ class PlantViewModel(application: Application, private val plantDao: PlantDao): 
         val notification = PeriodicWorkRequestBuilder<WaterReminderWorker>(duration,unit)
             .setInputData(data.build())
             .setInitialDelay(duration,unit)
-            .addTag("workCEO")
+            .addTag("WORKER")
             .build()
 
 

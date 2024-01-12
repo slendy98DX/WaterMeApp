@@ -20,12 +20,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.WorkManager
 import com.example.waterme.adapater.PlantAdapter
 import com.example.waterme.adapater.PlantListener
 import com.example.waterme.ui.ReminderDialogFragment
 import com.example.waterme.viewmodel.PlantViewModel
 import com.example.waterme.viewmodel.PlantViewModelFactory
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -46,6 +46,10 @@ class MainActivity : AppCompatActivity() {
         })
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
         recyclerView.adapter = adapter
+        val showWorkers = findViewById<FloatingActionButton>(R.id.showWorkers)
+        showWorkers.setOnClickListener {
+            viewModel.showWorkers(applicationContext)
+        }
         lifecycle.coroutineScope.launch {
             viewModel.collectPlants().collect(){
                 adapter.submitList(it)
