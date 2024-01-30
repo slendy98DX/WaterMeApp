@@ -58,12 +58,9 @@ class PlantViewModel(application: Application, private val plantDao: PlantDao): 
         unit: TimeUnit,
         plantName: String
     ) {
-        // TODO: create a Data instance with the plantName passed to it
         val data = Data.Builder()
         data.putString(WaterReminderWorker.nameKey, plantName)
 
-        // TODO: Generate a OneTimeWorkRequest with the passed in duration, time unit, and data
-        //  instance
         val notification = PeriodicWorkRequestBuilder<WaterReminderWorker>(duration,unit)
             .setInputData(data.build())
             .setInitialDelay(duration,unit)
